@@ -36,17 +36,17 @@
         </section>
 
         <section id="transport" class="section">
-            <h2>Transprot Emissionen berechnen</h2>
+            <h2>Emissionen berechnen</h2>
             <form class="form">
-                <label for="km">Gefahrene Kilometer: </label>
-                <input type="number" id="km" name="km" />
-                <label for="vehicel">Fahrzeugtyp:</label>
-                <select id="vehicel">
-                    <option>Benzin</option>
-                    <option>Diesel</option>
-                    <option>Elektro</option>
+                <label for="duration">Zeit: </label>
+                <input type="number" id="duration" name="duration" />
+                <label for="category">Kategorie:</label>
+                <select id="mySelect">
+                    <option>Auto</option>
+                    <option>Waschmaschine</option>
+                    <option>TV</option>
                 </select>
-                <button type="submit">Berechnen</button>
+                <button type="submit" id="berechnen">Berechnen</button>
             </form>
             <div class="result">CO₂-Ausstoß: <span> kg</span></div>
         </section>
