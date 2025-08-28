@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>SmartHome Energy Viewer</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f4f8;
+      color: #333;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2d6a4f;
+    }
+
+    #co2-output {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #ffffff;
+      border-left: 5px solid #2d6a4f;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    canvas {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>SmartHome Energy Viewer</h1>
+  <canvas id="energyChart" width="600" height="300"></canvas>
+  <div id="co2-output"></div>
+
+  <script>
+    const data = [
+      { tag: "Montag", kwh: 7.2 },
+      { tag: "Dienstag", kwh: 6.5 },
+      { tag: "Mittwoch", kwh: 8.9 },
+      { tag: "Donnerstag", kwh: 9.3 },
+      { tag: "Freitag", kwh: 10.5 },
+      { tag: "Samstag", kwh: 12.4 },
+      { tag: "Sonntag", kwh: 11.1 }
+    ];
+
+    const ctx = document.getElementById('energyChart').getContext('2d');
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.map(d => d.tag),
+        datasets: [{
+          label: 'Stromverbrauch (kWh)',
+          data: data.map(d => d.kwh),
+          backgroundColor: data.map(d => {
+            if (d.kwh < 8) return '#74c69d';     // grün
+            if (d.kwh < 10) return '#f9c74f';    // gelb
+            return '#f94144';                   // rot
+          })
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'kWh'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+
+    // CO2-Ausstoß berechnen (0.4 kg CO₂ pro kWh)
+    const co2 = data.map(d => ({
+      tag: d.tag,
+      co2: (d.kwh * 0.4).toFixed(2)
+    }));
+
+    const output = document.getElementById('co2-output');
+    output.innerHTML = "<h3>CO₂-Ausstoß pro Tag:</h3><ul>" +
+      co2.map(d => `<li><strong>${d.tag}:</strong> ${d.co2} kg CO₂</li>`).join('') +
+      "</ul>";
+  </script>
+</body>
+</html>

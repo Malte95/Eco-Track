@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack – CO₂-Rechner</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">🌿 EcoTrack</div>
+        <nav>
+            <ul>
+                <li href="#dashboard"></li>
+                <li href="#transport"></li>
+                <li href="#goals"></li>
+                <li href="#settings"></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="dashboard" class="section">
+            <h1>Dein CO₂-Fußabdruck</h1>
+            <div class="cards">
+                <div class="card">Total: </div>
+                <div class="card">Ziel: </div>
+                <div class="card">Differenz: </div>
+            </div>
+            <div class="charts">
+                <div class="chart">[Donut Chart]</div>
+                <div class="chart">[Balken Diagramm]</div>
+            </div>
+        </section>
+
+        <section id="transport" class="section">
+            <h2>Transprot Emissionen berechnen</h2>
+            <form class="form">
+                <label for="km">Gefahrene Kilometer: </label>
+                <input type="number" id="km" name="km" />
+                <label for="vehicel">Fahrzeugtyp:</label>
+                <select id="vehicel">
+                    <option>Benzin</option>
+                    <option>Diesel</option>
+                    <option>Elektro</option>
+                </select>
+                <button type="submit">Berechnen</button>
+            </form>
+            <div class="result">CO₂-Ausstoß: <span> kg</span></div>
+        </section>
+
+        <section id="goals" class="section">
+            <h2>Dein Zieltracker</h2>
+            <div class="goal">
+                <label for="goal">Jahresziel (t CO₂):</label>
+                <input type="number" id="goal" />
+                <div class="progress">
+                    <div class="progress-bar" style="width: 50%"></div>
+                </div>
+                <p>Du hast 50% deines Ziels erreicht!</p>
+            </div>
+        </section>
+
+        <section id="settings" class="section">
+            <h2>Einstellungen</h2>
+            <form class="form">
+                <label>Sprache:</label>
+                <select>
+                    <option>Deutsch</option>
+                    <option>English</option>
+                </select>
+                <label>Einheit:</label>
+                <select>
+                    <option>kg</option>
+                    <option>t</option>
+                </select>
+                <label>Darkmode:</label>
+                <input type="checkbox" />
+            </form>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
