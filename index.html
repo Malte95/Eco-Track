@@ -37,16 +37,39 @@
 
         <section id="transport" class="section">
             <h2>Emissionen berechnen</h2>
+
+            <table id="ergebniss" border="1" style="margin-top: 1rem;">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Value</th>
+                    <th>CO₂ Emission</th>
+                </tr>
+            </thead>
+            <tbody id="ergebnis-body"></tbody>
+            </table>
+
             <form class="form">
                 <label for="duration">Zeit: </label>
                 <input type="number" id="duration" name="duration" />
+                <label for="distanceKm">Distance (km):</label>
+                <input type="number" id="distanceKm" min="0" step="0.1" placeholder="z.B. 12.5">
+                <label for="consumptionPer100">Consumption per 100 km:</label>
+                <input type="number" id="consumptionPer100" min="0" step="0.1" placeholder="z.B. 6.5">
+                <small id="consumptionHint" style="display: block; opacity:.8;"></small>
+                <label for="fuelType">Fuel:</label>
+                <select id="fuelType">
+                    <option>Petrol</option>
+                    <option>Diesel</option>
+                    <option>Electricity</option>
+                </select>
                 <label for="category">Kategorie:</label>
                 <select id="mySelect">
                     <option>Auto</option>
                     <option>Waschmaschine</option>
                     <option>TV</option>
                 </select>
-                <button type="submit" id="berechnen">Berechnen</button>
+                <button id="berechnen" type="button">Berechnen</button>
             </form>
             <div class="result">CO₂-Ausstoß: <span> kg</span></div>
         </section>
