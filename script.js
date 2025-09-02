@@ -1,6 +1,15 @@
 const consumptionInput = document.getElementById("consumptionPer100");
+const mySelect = document.getElementById("mySelect");
+const distanceKm = document.getElementById("distanceKm");
+const consumptionPer100 = document.getElementById("consumptionPer100");
+const duration =document.getElementById("duration");
 const hintEl = document.getElementById("consumptionHint");
 const fuelTypeEl = document.getElementById("fuelType");
+const labelDuration = document.querySelector('label[for="duration"]');
+const labelDistance = document.querySelector('label[for="distanceKm"]');
+const labelConsumption = document.querySelector('label[for="consumptionPer100"]');
+const labelFuel = document.querySelector('label[for="fuelType"]');
+
 
 const EMISSION_FACTORS = {
   Petrol: 2.31,      // kg CO2 / Liter
@@ -84,9 +93,43 @@ function updateConsumptionHint() {
   }
 }
 
+function show(el) {el.classList.remove("hidden");}
+function hide(el) {el.classList.add("hidden"); }
+
+function updateVisibleFields() {
+  const cat = mySelect.value; // die Select Box
+
+  if (cat === "Auto") {
+    show(distanceKm);
+    show(consumptionPer100);
+    show(fuelTypeEl);
+    show(labelDistance);
+    show(labelConsumption);
+    show(labelFuel);
+
+    hide(duration);
+    hide(labelDuration);
+
+  } else {
+    show(duration);
+    show(labelDuration);
+
+    hide(distanceKm);
+    hide(consumptionPer100);
+    hide(fuelTypeEl);
+    hide(labelDistance);
+    hide(labelConsumption);
+    hide(labelFuel);
+
+
+  }
+}
+
 // beim Laden + bei jeder Änderung aktualisieren
 updateConsumptionHint();
 fuelTypeEl.addEventListener("change", updateConsumptionHint);
+updateVisibleFields();
+mySelect.addEventListener("change", updateVisibleFields);
 
 
 
