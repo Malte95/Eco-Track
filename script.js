@@ -1,4 +1,3 @@
-const consumptionInput = document.getElementById("consumptionPer100");
 const mySelect = document.getElementById("mySelect");
 const distanceKm = document.getElementById("distanceKm");
 const consumptionPer100 = document.getElementById("consumptionPer100");
@@ -18,7 +17,7 @@ const EMISSION_FACTORS = {
 };
 
 document.getElementById("berechnen").addEventListener("click", () => {
-  const selected = document.getElementById("mySelect").value;       // "Auto" | "Waschmaschine" | "TV"
+  const selected = mySelect.value;       // "Auto" | "Waschmaschine" | "TV"
   const tbody = document.getElementById("ergebnis-body");
 
   if (!selected) {
@@ -28,46 +27,46 @@ document.getElementById("berechnen").addEventListener("click", () => {
 
   switch (selected) {
     case "Auto": {
-      const distanceKm = Number(document.getElementById("distanceKm").value);
-      const consumptionPer100 = Number(consumptionInput.value);     // aktuellen Wert holen
+      const distanceKmValue = Number(distanceKm.value);
+      const consumptionPer100Value = Number(consumptionPer100.value);     // aktuellen Wert holen
       const fuelType = fuelTypeEl.value;
 
-      if (!(distanceKm > 0) || !(consumptionPer100 > 0) || !EMISSION_FACTORS[fuelType]) {
+      if (!(distanceKmValue > 0) || !(consumptionPer100Value > 0) || !EMISSION_FACTORS[fuelType]) {
         console.warn("Bitte gültige Werte für Auto eingeben.");
         return;
       }
 
-      const co2 = calculateCarCO2(distanceKm, consumptionPer100, fuelType);
+      const co2 = calculateCarCO2(distanceKmValue, consumptionPer100Value, fuelType);
 
       const row = tbody.insertRow();
       row.insertCell(0).textContent = "Auto";
-      row.insertCell(1).textContent = `${distanceKm} km`;
+      row.insertCell(1).textContent = `${distanceKmValue} km`;
       row.insertCell(2).textContent = `${co2.toFixed(2)} kg`;
       break;
     }
 
     case "Waschmaschine": {
-      const duration = Number(document.getElementById("duration").value);
-      if (!(duration > 0)) {
+      const durationValue = Number(duration.value);
+      if (!(durationValue > 0)) {
         console.warn("Bitte eine gültige Zeit eingeben.");
         return;
       }
       const row = tbody.insertRow();
       row.insertCell(0).textContent = "Waschmaschine";
-      row.insertCell(1).textContent = `${duration} h`;
+      row.insertCell(1).textContent = `${durationValue} h`;
       row.insertCell(2).textContent = "—"; // später berechnen
       break;
     }
 
     case "TV": {
-      const duration = Number(document.getElementById("duration").value);
-      if (!(duration > 0)) {
+      const durationValue = Number(duration.value);
+      if (!(durationValue > 0)) {
         console.warn("Bitte eine gültige Zeit eingeben.");
         return;
       }
       const row = tbody.insertRow();
       row.insertCell(0).textContent = "TV";
-      row.insertCell(1).textContent = `${duration} h`;
+      row.insertCell(1).textContent = `${durationValue} h`;
       row.insertCell(2).textContent = "—"; // später berechnen
       break;
     }
@@ -77,19 +76,19 @@ document.getElementById("berechnen").addEventListener("click", () => {
   }
 });
 
-function calculateCarCO2(distanceKm, consumptionPer100, fuelType) {
+function calculateCarCO2(distanceKmValue, consumptionPer100Value, fuelType) {
   const factor = EMISSION_FACTORS[fuelType];
-  return (distanceKm / 100) * consumptionPer100 * factor;
+  return (distanceKmValue / 100) * consumptionPer100Value * factor;
 }
 
 function updateConsumptionHint() {
   const fuel = fuelTypeEl.value; // "Petrol" | "Diesel" | "Electricity"
   if (fuel === "Electricity") {
     hintEl.textContent = "Einheit: kWh/100 km (z. B. 16–22)";
-    consumptionInput.placeholder = "z. B. 18";
+    consumptionPer100.placeholder = "z. B. 18";
   } else {
     hintEl.textContent = "Einheit: L/100 km (z. B. 4–10)";
-    consumptionInput.placeholder = "z. B. 6.5";
+    consumptionPer100.placeholder = "z. B. 6.5";
   }
 }
 
@@ -106,6 +105,7 @@ function updateVisibleFields() {
     show(labelDistance);
     show(labelConsumption);
     show(labelFuel);
+    show(hintEl);
 
     hide(duration);
     hide(labelDuration);
@@ -120,8 +120,8 @@ function updateVisibleFields() {
     hide(labelDistance);
     hide(labelConsumption);
     hide(labelFuel);
-
-
+    hide(hintEl);
+    
   }
 }
 
