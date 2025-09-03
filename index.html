@@ -13,10 +13,10 @@
         <div class="logo">🌿 EcoTrack</div>
         <nav>
             <ul>
-                <li href="#dashboard"></li>
-                <li href="#transport"></li>
-                <li href="#goals"></li>
-                <li href="#settings"></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#transport">Transport</a></li>
+                <li><a href="#goals">Goals</a></li>
+                <li><a href="#settings">Settings</a></li>
             </ul>
         </nav>
     </header>
@@ -25,9 +25,9 @@
         <section id="dashboard" class="section">
             <h1>Dein CO₂-Fußabdruck</h1>
             <div class="cards">
-                <div class="card">Total: </div>
-                <div class="card">Ziel: </div>
-                <div class="card">Differenz: </div>
+                <div class="card">Total: <span id="totalCo2">0.00 kg</span></div>
+                <div class="card">Ziel: <span id="goalCo2">-</span></div>
+                <div class="card">Differenz: <span id="diffCo2">-</span></div>
             </div>
             <div class="charts">
                 <div class="chart">[Donut Chart]</div>
@@ -52,6 +52,8 @@
             <form class="form">
                 <label for="duration">Zeit: </label>
                 <input type="number" id="duration" name="duration" />
+                <label for="powerWatts">Power (W):</label>
+                <input type="number" id="powerWatts" min="1" step="1" placeholder="z.B. 100">
                 <label for="distanceKm">Distance (km):</label>
                 <input type="number" id="distanceKm" min="0" step="0.1" placeholder="z.B. 12.5">
                 <label for="consumptionPer100">Consumption per 100 km:</label>
@@ -63,15 +65,14 @@
                     <option>Diesel</option>
                     <option>Electricity</option>
                 </select>
-                <label for="category">Kategorie:</label>
+                <label for="mySelect">Kategorie:</label>
                 <select id="mySelect">
                     <option>Auto</option>
                     <option>Waschmaschine</option>
                     <option>TV</option>
                 </select>
-                <button id="berechnen" type="button">Berechnen</button>
+                <button id="berechnen" type="submit">Berechnen</button>
             </form>
-            <div class="result">CO₂-Ausstoß: <span> kg</span></div>
         </section>
 
         <section id="goals" class="section">

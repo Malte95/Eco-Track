@@ -1,4 +1,5 @@
 const mySelect = document.getElementById("mySelect");
+const tbody = document.getElementById("ergebnis-body");
 const distanceKm = document.getElementById("distanceKm");
 const consumptionPer100 = document.getElementById("consumptionPer100");
 const duration =document.getElementById("duration");
@@ -8,7 +9,15 @@ const labelDuration = document.querySelector('label[for="duration"]');
 const labelDistance = document.querySelector('label[for="distanceKm"]');
 const labelConsumption = document.querySelector('label[for="consumptionPer100"]');
 const labelFuel = document.querySelector('label[for="fuelType"]');
-
+const powerWatts = document.getElementById("powerWatts");
+const labelPower = document.querySelector('label[for="powerWatts"]');
+let totalCo2 = 0;
+let totalCo2_g = 0;
+const totalEl = document.getElementById("totalCo2");
+const diffEl = document.getElementById("diffCo2");
+const goalInput = document.getElementById("goal");
+const goalEl = document.getElementById("goalCo2");
+const num = el => Number((el?.value ?? "").trim());
 
 const EMISSION_FACTORS = {
   Petrol: 2.31,      // kg CO2 / Liter
@@ -16,9 +25,12 @@ const EMISSION_FACTORS = {
   Electricity: 0.4   // kg CO2 / kWh
 };
 
-document.getElementById("berechnen").addEventListener("click", () => {
+const form = document.querySelector(".form"); 
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault(); // kein Reload
+
   const selected = mySelect.value;       // "Auto" | "Waschmaschine" | "TV"
-  const tbody = document.getElementById("ergebnis-body");
 
   if (!selected) {
     console.warn("Bitte eine Kategorie wählen.");
@@ -27,8 +39,8 @@ document.getElementById("berechnen").addEventListener("click", () => {
 
   switch (selected) {
     case "Auto": {
-      const distanceKmValue = Number(distanceKm.value);
-      const consumptionPer100Value = Number(consumptionPer100.value);     // aktuellen Wert holen
+      const distanceKmValue = num(distanceKm);
+      const consumptionPer100Value = num(consumptionPer100);    // aktuellen Wert holen
       const fuelType = fuelTypeEl.value;
 
       if (!(distanceKmValue > 0) || !(consumptionPer100Value > 0) || !EMISSION_FACTORS[fuelType]) {
@@ -40,34 +52,52 @@ document.getElementById("berechnen").addEventListener("click", () => {
 
       const row = tbody.insertRow();
       row.insertCell(0).textContent = "Auto";
-      row.insertCell(1).textContent = `${distanceKmValue} km`;
+      row.insertCell(1).textContent = `${distanceKmValue} km @ ${consumptionPer100Value} L`;
       row.insertCell(2).textContent = `${co2.toFixed(2)} kg`;
+      updateTotals(co2); 
+      clearVisibleInputs();
       break;
     }
 
     case "Waschmaschine": {
-      const durationValue = Number(duration.value);
-      if (!(durationValue > 0)) {
-        console.warn("Bitte eine gültige Zeit eingeben.");
+      const durationValue = num(duration);
+      const powerValue = num(powerWatts);
+
+      if (!(durationValue > 0) || !(powerValue > 0)) {
+        console.warn("Bitte eine gültige Zeit  und Leistung eingeben.");
         return;
       }
+
+      const kwh = (powerValue * durationValue) / 1000;
+      const co2 = kwh * EMISSION_FACTORS.Electricity;
+
       const row = tbody.insertRow();
       row.insertCell(0).textContent = "Waschmaschine";
-      row.insertCell(1).textContent = `${durationValue} h`;
-      row.insertCell(2).textContent = "—"; // später berechnen
+      row.insertCell(1).textContent = `${durationValue} h @ ${powerValue} W`;
+      row.insertCell(2).textContent = `${co2.toFixed(2)} kg`; 
+      updateTotals(co2); 
+      clearVisibleInputs();
       break;
     }
 
     case "TV": {
       const durationValue = Number(duration.value);
-      if (!(durationValue > 0)) {
-        console.warn("Bitte eine gültige Zeit eingeben.");
+      const powerValue = Number(powerWatts.value);
+
+      if (!(durationValue > 0) || !(powerValue > 0)) {
+        console.warn("Bitte eine gültige Zeit  und Leistung eingeben.");
         return;
       }
+
+      const kwh = (powerValue * durationValue) / 1000;
+      const co2 = kwh * EMISSION_FACTORS.Electricity;
+
       const row = tbody.insertRow();
       row.insertCell(0).textContent = "TV";
-      row.insertCell(1).textContent = `${durationValue} h`;
-      row.insertCell(2).textContent = "—"; // später berechnen
+      row.insertCell(1).textContent = `${durationValue} h @ ${powerValue} W`;
+      row.insertCell(2).textContent = `${co2.toFixed(2)} kg`;
+      updateTotals(co2); 
+      clearVisibleInputs();
       break;
     }
 
@@ -94,6 +124,18 @@ function updateConsumptionHint() {
 
 function show(el) {el.classList.remove("hidden");}
 function hide(el) {el.classList.add("hidden"); }
+function clearValue(el) { if (el) el.value = ""; }
+
+function clearVisibleInputs() {
+  const cat = mySelect.value;
+  if(cat === "Auto") {
+    distanceKm.value = "";
+    consumptionPer100.value = "";
+  } else {
+    duration.value = "";
+    powerWatts.value = "";
+  }
+}
 
 function updateVisibleFields() {
   const cat = mySelect.value; // die Select Box
@@ -109,10 +151,17 @@ function updateVisibleFields() {
 
     hide(duration);
     hide(labelDuration);
+    hide(powerWatts);
+    hide(labelPower);
+
+    clearValue(duration);
+    clearValue(powerWatts);
 
   } else {
     show(duration);
     show(labelDuration);
+    show(powerWatts);
+    show(labelPower);
 
     hide(distanceKm);
     hide(consumptionPer100);
@@ -121,15 +170,45 @@ function updateVisibleFields() {
     hide(labelConsumption);
     hide(labelFuel);
     hide(hintEl);
+
+    clearValue(distanceKm);
+    clearValue(consumptionPer100);
+    fuelTypeEl.selectedIndex = 0;
     
   }
 }
+
+function updateTotals(addedKg) {
+  if (Number.isFinite(addedKg) && addedKg >= 0) {
+    totalCo2_g += Math.round(addedKg * 1000); //kg -> g
+  }
+  const totalKg = totalCo2_g / 1000;
+  totalEl.textContent = `${totalKg.toFixed(2)} kg`;
+
+  // Ziel und Differenz aktualisieren (falls Ziel angegeben)
+  const goalTons = Number(goalInput.value); //Ziel in t CO2
+  if (goalTons > 0) {
+    const goalKg = goalTons * 1000; // t -> kg
+    goalEl.textContent = `${goalKg.toFixed(0)} kg`;
+    const diffKg = goalKg -totalCo2;
+    diffEl.textContent = `${diffKg.toFixed(2)} kg`;
+  } else {
+    goalEl.textContent = "-";
+    diffEl.textContent = "-";
+
+  }
+}
+// Ziel-Änderungen live berücksichtigen
+updateTotals(0); 
+goalInput.addEventListener("input", () => updateTotals(0));
+goalInput.dispatchEvent(new Event("input"));
 
 // beim Laden + bei jeder Änderung aktualisieren
 updateConsumptionHint();
 fuelTypeEl.addEventListener("change", updateConsumptionHint);
 updateVisibleFields();
 mySelect.addEventListener("change", updateVisibleFields);
+
 
 
 
