@@ -54,6 +54,9 @@ form.addEventListener("submit", (e) => {
       row.insertCell(0).textContent = "Auto";
       row.insertCell(1).textContent = `${distanceKmValue} km @ ${consumptionPer100Value} L`;
       row.insertCell(2).textContent = `${co2.toFixed(2)} kg`;
+      row.dataset.co2 = co2.toString();
+      const actionCell = row.insertCell(3);
+      actionCell.innerHTML = '<button class="row-delete" type="button">x</button>';
       updateTotals(co2); 
       clearVisibleInputs();
       break;
@@ -75,6 +78,9 @@ form.addEventListener("submit", (e) => {
       row.insertCell(0).textContent = "Waschmaschine";
       row.insertCell(1).textContent = `${durationValue} h @ ${powerValue} W`;
       row.insertCell(2).textContent = `${co2.toFixed(2)} kg`; 
+      row.dataset.co2 = co2.toString();  
+      const actionCell = row.insertCell(3);
+      actionCell.innerHTML = '<button class="row-delete" type="button">x</button>';
       updateTotals(co2); 
       clearVisibleInputs();
       break;
@@ -96,6 +102,9 @@ form.addEventListener("submit", (e) => {
       row.insertCell(0).textContent = "TV";
       row.insertCell(1).textContent = `${durationValue} h @ ${powerValue} W`;
       row.insertCell(2).textContent = `${co2.toFixed(2)} kg`;
+      row.dataset.co2 = co2.toString();  
+      const actionCell = row.insertCell(3);
+      actionCell.innerHTML = '<button class="row-delete" type="button">x</button>';
       updateTotals(co2); 
       clearVisibleInputs();
       break;
@@ -179,9 +188,13 @@ function updateVisibleFields() {
 }
 
 function updateTotals(addedKg) {
-  if (Number.isFinite(addedKg) && addedKg >= 0) {
-    totalCo2_g += Math.round(addedKg * 1000); //kg -> g
+  if (Number.isFinite(addedKg)) {
+    totalCo2 += addedKg;
+    if(totalCo2 <0) totalCo2 = 0;
   }
+    
+    totalCo2_g += Math.round(addedKg * 1000); //kg -> g
+  
   const totalKg = totalCo2_g / 1000;
   totalEl.textContent = `${totalKg.toFixed(2)} kg`;
 
@@ -208,6 +221,23 @@ updateConsumptionHint();
 fuelTypeEl.addEventListener("change", updateConsumptionHint);
 updateVisibleFields();
 mySelect.addEventListener("change", updateVisibleFields);
+
+tbody.addEventListener("click", (e) => {
+  const btn = e.target.closest(".row-delete");
+  if (!btn) return; // kein Delete-Button geklickt
+
+  const row = btn.closest("tr");
+  if (!row) return;
+
+  // CO₂-Wert aus dataset holen und von den Totals abziehen
+  const co2 = Number(row.dataset.co2 || "0");
+  if (Number.isFinite(co2) && co2 > 0) {
+    updateTotals(-co2);
+  }
+
+  // Zeile entfernen
+  row.remove();
+});
 
 
 
