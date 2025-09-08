@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoTrack – CO₂-Rechner</title>
+    <title>EcoTrack – CO₂-Calculator</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -13,21 +13,21 @@
         <div class="logo">🌿 EcoTrack</div>
         <nav>
             <ul>
-                <li><a href="#dashboard">Dashboard</a></li>
-                <li><a href="#transport">Transport</a></li>
-                <li><a href="#goals">Goals</a></li>
-                <li><a href="#settings">Settings</a></li>
+                <li data-i18n="dashboard.dashboard"><a href="#dashboard">Dashboard</a></li>
+                <li data-i18n="dashboard.transport"><a href="#transport">Transport</a></li>
+                <li data-i18n="dashboard.goal"><a href="#goals">Goals</a></li>
+                <li data-i18n="dashboard.settings"><a href="#settings">Settings</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
         <section id="dashboard" class="section">
-            <h1>Dein CO₂-Fußabdruck</h1>
+            <h1 data-i18n="section.dashboard.title">Your CO2 footprint</h1>
             <div class="cards">
-                <div class="card">Total: <span id="totalCo2">0.00 kg</span></div>
-                <div class="card">Ziel: <span id="goalCo2">-</span></div>
-                <div class="card">Differenz: <span id="diffCo2">-</span></div>
+                <div class="card"><span data-i18n="card.total">Total:</span> <span id="totalCo2">0.00 kg</span></div>
+                <div class="card"><span data-i18n="card.goal">Goal:</span> <span id="goalCo2">-</span></div>
+                <div class="card"><span data-i18n="card.diff">Difference:</span> <span id="diffCo2">-</span></div>
             </div>
             <div class="charts">
                 <div class="chart">[Donut Chart]</div>
@@ -36,67 +36,67 @@
         </section>
 
         <section id="transport" class="section">
-            <h2>Emissionen berechnen</h2>
+            <h2>Calculate emissions </h2>
 
             <table id="ergebniss" border="1" style="margin-top: 1rem;">
             <thead>
                 <tr>
-                    <th>Category</th>
-                    <th>Value</th>
-                    <th>CO₂ Emission</th>
-                    <th>Action</th>
+                    <th data-i18n="form.category">Category</th>
+                    <th data-i18n="settings.unit">Value</th>
+                    <th data-i18n="tbl.Emission">CO₂ Emission</th>
+                    <th data-i18n="tbl.Action">Action</th>
                 </tr>
             </thead>
             <tbody id="ergebnis-body"></tbody>
             </table>
 
             <form class="form">
-                <label for="duration">Zeit: </label>
-                <input type="number" id="duration" name="duration" />
-                <label for="powerWatts">Power (W):</label>
-                <input type="number" id="powerWatts" min="1" step="1" placeholder="z.B. 100">
-                <label for="distanceKm">Distance (km):</label>
-                <input type="number" id="distanceKm" min="0" step="0.1" placeholder="z.B. 12.5">
-                <label for="consumptionPer100">Consumption per 100 km:</label>
-                <input type="number" id="consumptionPer100" min="0" step="0.1" placeholder="z.B. 6.5">
-                <small id="consumptionHint" style="display: block; opacity:.8;"></small>
-                <label for="fuelType">Fuel:</label>
+                <label for="duration" data-i18n="form.duration">Time: </label>
+                <input type="number" id="duration" name="duration"  data-i18n-placeholder="ph.duration"/>
+                <label for="powerWatts" data-i18n="form.power">Power (W):</label>
+                <input type="number" id="powerWatts" min="1" step="1" data-i18n-placeholder="ph.power">
+                <label for="distanceKm" data-i18n="form.distance">Distance (km):</label>
+                <input type="number" id="distanceKm" min="0" step="0.1" data-i18n-placeholder="ph.distance">
+                <label for="consumptionPer100" data-i18n="form.consumption">Consumption per 100 km:</label>
+                <input type="number" id="consumptionPer100" min="0" step="0.1" data-i18n-placeholder="ph.consumption">
+                <small id="consumptionHint" style="display: block; opacity:.8;" data-i18n="form.consumption_hint_liquid"></small>
+                <label for="fuelType" data-i18n="form.fuel">Fuel:</label>
                 <select id="fuelType">
-                    <option>Petrol</option>
-                    <option>Diesel</option>
-                    <option>Electricity</option>
+                    <option data-i18n="fuel.petrol" value="Petrol">Petrol</option>
+                    <option data-i18n="fuel.diesel" value="Diesel">Diesel</option>
+                    <option data-i18n="fuel.electricity" value="Electricity">Electricity</option>
                 </select>
-                <label for="mySelect">Kategorie:</label>
+                <label for="mySelect" data-i18n="form.category">Category:</label>
                 <select id="mySelect">
-                    <option>Auto</option>
-                    <option>Waschmaschine</option>
-                    <option>TV</option>
+                    <option data-i18n="cat.car" value="Car">Car</option>
+                    <option data-i18n="cat.washingMachine" value="Washing machine">Washing machine</option>
+                    <option data-i18n="cat.tv" value="TV">TV</option>
                 </select>
-                <button id="berechnen" type="submit">Berechnen</button>
+                <button id="calculate" type="submit" data-i18n="btn.calculate">Calculate</button>
             </form>
         </section>
 
         <section id="goals" class="section">
-            <h2>Dein Zieltracker</h2>
+            <h2 data-i18n="section.goals.title">Your goal tracker</h2>
             <div class="goal">
-                <label for="goal">Jahresziel (t CO₂):</label>
+                <label for="goal">Annual goal(t CO₂):</label>
                 <input type="number" id="goal" />
                 <div class="progress">
                     <div class="progress-bar" style="width: 50%"></div>
                 </div>
-                <p>Du hast 50% deines Ziels erreicht!</p>
+                <p id="progressText" data-i18n="progress.text">You have reached 50% of your goal!</p>
             </div>
         </section>
 
         <section id="settings" class="section">
-            <h2>Einstellungen</h2>
+            <h2 data-i18n="section.settings.title">Settings</h2>
             <form class="form">
-                <label>Sprache:</label>
-                <select>
+                <label data-i18n="settings.language">Language:</label>
+                <select id="langSelect">
                     <option>Deutsch</option>
                     <option>English</option>
                 </select>
-                <label>Einheit:</label>
+                <label data-i18n="settings.unit">Unit:</label>
                 <select>
                     <option>kg</option>
                     <option>t</option>
